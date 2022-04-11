@@ -10,12 +10,26 @@ def home(response):
 
 def GetAList(response, id):
     ls = ToDoList.objects.get(id=id)
+    if response.method == "POST":
+        print(response.POST)
+        if response.POST.get("save"):
+            for item in ls.item_set.all():
+                if response.POST.get("c"+str(item.id)) == "clicked":
+                    item.complete = True
+                else:
+                    item.complete = False
+                item.save()
+
+        elif response.POST.get("newItem"):
+            txt = response.POST.get("new")
+            if len(txt) > 2:
+                ls.item_set.create(text=txt, complete=False)
+            else:
+                print("Invalid")
+
     my_dict = {
         "ls":ls
     }
-    print(my_dict["ls"].item_set.all())
-    #items = ls.item_set.get(id=1)
-    #return HttpResponse("<h1>%s</h1><br></br><p>%s</p>" % (ls.name, items.text))
     return render(response,"main/list.html", my_dict)
 
 def create(response):
@@ -25,7 +39,6 @@ def create(response):
             n = form.cleaned_data["name"]
             t = ToDoList(name=n)
             t.save()
-
         return HttpResponseRedirect("/%i" % t.id)
     else:
         form = CreateNewList()

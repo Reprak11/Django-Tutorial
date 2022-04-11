@@ -1,9 +1,17 @@
 <html>
     <head>
         <title>{%block title%}Reprak11's Website{%endblock%}</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'base.css' %}">
     </head>
     <body>
-        <div id="content", name="content">
+        <div class="sidenav">
+            <a href="/">Home</a>
+            <a href="/create">Create</a>
+            <a href="/1">View</a>
+        </div>
+
+        <div id="content", name="content" class="main">
             {% block content %}
             {% endblock %}
         </div>
